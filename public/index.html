@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <title>Oplontis</title>
+
+        <!-- Babylon.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
+        <script src="https://assets.babylonjs.com/generated/Assets.js"></script>
+        <script src="https://preview.babylonjs.com/ammo.js"></script>
+        <script src="https://preview.babylonjs.com/cannon.js"></script>
+        <script src="https://preview.babylonjs.com/Oimo.js"></script>
+        <script src="https://preview.babylonjs.com/earcut.min.js"></script>
+        <script src="https://preview.babylonjs.com/babylon.js"></script>
+        <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+        <script src="https://preview.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+        <script src="https://preview.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+        <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+        <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+        <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+        <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+
+        <style>
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+
+            }
+
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+            }
+
+            #right_panel {
+                padding: 5px 13px 5px 3px;
+              }
+        </style>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    </head>
+<body style="background-color:#33334C;">
+
+  <nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" onclick="whole_view()">Oplontis</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+          <a class="nav-link active" aria-current="page" onclick="whole_view()">Home</a>
+        </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Select Room
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" onclick="set_camera(-8.45860201124797, 1.7568465743535204, -7.279372270435002)" id="button_1">Room 1</a></li>
+              <li><a class="dropdown-item" onclick="set_camera(-12.42738343218579, 1.3503721105471775, -4.359690955401615)" id="button_2">Room 2</a></li>
+              <li><a class="dropdown-item" onclick="set_camera(-13.435446791324225, 2.7, -22.736790354662723)" id="button_3">Room 3</a></li>
+              <li><a class="dropdown-item" onclick="set_camera(-7.372238067672185, 1.5369092582467636, -23.378115061799598)" id="button_4">Room 4</a></li>
+              <li><a class="dropdown-item" onclick="set_camera(-3.485568738900796, 2.0, -21.55749972248047)" id="button_5">Room 5</a></li>
+              <li><a class="dropdown-item" onclick="set_camera(-10.691320983807147, 1.4, -17.854035890665948)" id="button_6">Room 6</a></li>
+              <li><a class="dropdown-item" onclick="set_camera(-13.329678606255994, 1.2071047216533823, -11.665728337121125)" id="button_7">Room 7</a></li>
+              <li><a class="dropdown-item" onclick="set_camera(-3.8310952436606924, 1.7436921093190487, -8.920600813723837)" id="button_8">Room 8</a></li>
+              <li><a class="dropdown-item" onclick="set_camera(-3.5798780005445865, 1.4688088226382836, -14.842507484079068)" id="button_9">Room 9</a></li>
+            </ul>
+          </li>
+
+          <li class="nav-item">
+          <a class="nav-link active" aria-current="page" onclick="goFullscreen('renderCanvas')">Full Screen</a>
+        </li>
+
+        <li class="nav-item">
+        <a class="nav-link active" aria-current="page" onclick="whole_view()">Audio</a>
+      </li>
+
+      <li class="nav-item">
+      <a class="nav-link active" aria-current="page" id="navigate"></a>
+    </li>
+
+    <li class="nav-item">
+    <a class="nav-link active" aria-current="page" id="back"></a>
+    </li>
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+<div class="row">
+    <!--div class="col-2"><button onclick="myFunction()" id="button_1" type="button">Click Me!</button></div-->
+    <div class="col-10">
+      <canvas id="renderCanvas"></canvas>
+    </div>
+    <div class="col-2" id="right_panel">
+      <!--button type="button" class="btn btn-dark" id="full_screen" onclick="goFullscreen('renderCanvas')">
+        Full Screen
+      </button>
+      <button type="button" class="btn btn-dark">
+        Audio
+      </button-->
+
+      <div class="text-center">
+     <img src="./wall.jpeg" class="img-fluid" alt="image of a wall">
+     <p id="text1" style="color:white" id="text"> The mission of the Oplontis Project is to conduct a systematic, multidisciplinary study of Villa A (“of Poppaea”) and Villa B (“of Lucius Crassius Tertius”) at Oplontis (Torre Annunziata, Italy). </p>
+
+   </div>
+    </div>
+</div>
+
+<!--div class="row" style="color:white" id="text">
+  <p id="text1"> Oplontis Project Oplontis Project Oplontis Project Oplontis Project Oplontis Project Oplontis Project Oplontis Project Oplontis Project </p>
+</div-->
+
+    <script>
+        var canvas = document.getElementById("renderCanvas");
+
+        var startRenderLoop = function (engine, canvas) {
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    //console.log("test")
+                    sceneToRender.render();
+
+                }
+            });
+        }
+
+        var engine = null;
+        var scene = null;
+        var sceneToRender = null;
+        var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false}); };
+        var createScene = function () {
+
+          const scene = new BABYLON.Scene(engine);
+
+          var building = BABYLON.SceneLoader.Append("./", "west_villa_tex_1.glb", scene, function (meshes) {
+              scene.createDefaultCameraOrLight(true, true, true);
+              const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+
+              });
+            return scene;
+
+        };
+
+            window.initFunction = async function() {
+                    var asyncEngineCreation = async function() {
+                        try {
+                        return createDefaultEngine();
+                        } catch(e) {
+                        console.log("the available createEngine function failed. Creating the default engine instead");
+                        return createDefaultEngine();
+                        }
+                    }
+
+              window.engine = await asyncEngineCreation();
+              if (!engine) throw 'engine should not be null.';
+              startRenderLoop(engine, canvas)
+              window.scene = createScene()
+         }
+
+        initFunction().then(() => {
+          sceneToRender = scene
+        });
+
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+
+
+      function set_camera(x, y, z,){
+
+        var freeCamera = new BABYLON.ArcRotateCamera("freeCamera", 0, 0, 2, new BABYLON.Vector3(x, y, z), scene);
+                //Attach camera to canvas inputs
+                scene.activeCamera = freeCamera;
+                freeCamera.attachControl(canvas);
+                freeCamera.rotation.y = 1.0;
+                console.log("button clicked")
+                document.getElementById("navigate").innerHTML = "Navigate";
+                document.getElementById("back").innerHTML = "";
+
+      }
+
+      document.getElementById("navigate").addEventListener("click", function(){
+              x=scene.activeCamera.position["x"]
+              y=scene.activeCamera.position["y"]
+              z=scene.activeCamera.position["z"]
+              var freeCamera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(x, y, z), scene);                //Attach camera to canvas inputs
+              scene.activeCamera = freeCamera;
+              freeCamera.attachControl(canvas);
+              //freeCamera.rotation.y = 1.0;
+              document.getElementById("navigate").innerHTML = "";
+              document.getElementById("back").innerHTML = "Go back";
+
+       });
+
+       document.getElementById("back").addEventListener("click", function(){
+               x=scene.activeCamera.position["x"]
+               y=scene.activeCamera.position["y"]
+               z=scene.activeCamera.position["z"]
+               var freeCamera = new BABYLON.ArcRotateCamera("freeCamera", 0, 0, 2, new BABYLON.Vector3(x, y, z), scene);
+                       //Attach camera to canvas inputs
+                       scene.activeCamera = freeCamera;
+                       freeCamera.attachControl(canvas);
+                       freeCamera.rotation.y = 1.0;
+                       console.log("button clicked")
+                       document.getElementById("back").innerHTML = "";
+                       document.getElementById("navigate").innerHTML = "Navigate";
+
+        });
+
+
+        function whole_view() {
+          scene.createDefaultCameraOrLight(true, true, true);
+          const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
+
+                console.log("button clicked")
+                document.getElementById("navigate").innerHTML = "";
+                document.getElementById("text1").innerHTML = "The mission of the Oplontis Project is to conduct a systematic, multidisciplinary study of Villa A (“of Poppaea”) and Villa B (“of Lucius Crassius Tertius”) at Oplontis (Torre Annunziata, Italy).";
+            }
+
+        function goFullscreen(id) {
+          var element = document.getElementById(id);
+          if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+          }
+          else if (element.webkitRequestFullScreen) {
+            element.webkitRequestFullScreen();
+          }
+
+          document.getElementById(id).requestFullscreen();
+        }
+
+
+
+    </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+</body>
+</html>
